@@ -15,28 +15,37 @@ export default class KanbanBoard extends Component {
     this.backward = this.backward.bind(this)
   }
 
-  backward(taskName) {
-    
-    
+  backward(task) {
+   const newTask = {...task, stage: task.stage - 1}
+   this.setState((prevState) =>  {
+      return {
+        tasks:[...prevState.tasks.filter((t) => t.name !== task.name),
+        newTask
+      ]}
+    })
   }
-  
-  forward(taskName) {
-  
-
+  forward(task) {
+   const newTask = {...task, stage: task.stage + 1}
+   this.setState((prevState) =>  {
+      return {
+        tasks:[...prevState.tasks.filter((t) => t.name !== task.name),
+        newTask
+      ]}
+    })
   }
 
   componentDidMount() {
-    
+   
   }
  
   render() {
-    const { tasks } = this.state;
+    
 
     let stagesTasks = [];
     for (let i = 0; i < this.stagesNames.length; ++i) {
       stagesTasks.push([]);
     }
-    for (let task of tasks) {
+    for (let task of this.state.tasks) {
       const stageId = task.stage;
       stagesTasks[stageId].push(task);
     }
@@ -55,10 +64,10 @@ export default class KanbanBoard extends Component {
                                       <div className="li-content layout-row justify-content-between align-items-center">
                                         <span data-testid={`${task.name.split(' ').join('-')}-name`}>{task.name}</span>
                                         <div className="icons">
-                                          <button disabled={task.stage === 0} onClick={() => this.backward(task.name)} className="icon-only x-small mx-2" data-testid={`${task.name.split(' ').join('-')}-back`}>
+                                          <button disabled={task.stage === 0} onClick={() => this.backward(task)} className="icon-only x-small mx-2" data-testid={`${task.name.split(' ').join('-')}-back`}>
                                             <i className="material-icons">arrow_back</i>
                                           </button>
-                                          <button disabled={task.stage === 3} onClick={() => this.forward(task.name)} className="icon-only x-small mx-2" data-testid={`${task.name.split(' ').join('-')}-forward`}>
+                                          <button disabled={task.stage === 3} onClick={() => this.forward(task)} className="icon-only x-small mx-2" data-testid={`${task.name.split(' ').join('-')}-forward`}>
                                             <i className="material-icons">arrow_forward</i>
                                           </button>
                                         </div>
